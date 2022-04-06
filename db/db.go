@@ -1,24 +1,24 @@
 package db
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
 
-// type urls struct {
-// 	Short    string `json:"short"`
-// 	Original string `json:"original"`
-// }
+	"github.com/Arcady1/OZON_Internship_API/utils"
+)
 
 var allUrls = make(map[string]string)
 
-func SaveURLInDB(originalUrl string) (string, uint8) {
-	shortUrl := "http://short_url.com"
-	_, exists := allUrls[shortUrl]
+func SaveURLInDB(originalUrl string) (string, error) {
+	shortUrl := utils.GenerateShortURL(originalUrl)
 
+	_, exists := allUrls[shortUrl]
 	if exists == false {
 		allUrls[shortUrl] = originalUrl
 		fmt.Println("allUrls:", allUrls)
 	} else {
-		return "", 1
+		return "", errors.New("The short URL already exists")
 	}
 
-	return shortUrl, 0
+	return shortUrl, nil
 }

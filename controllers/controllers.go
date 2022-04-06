@@ -25,13 +25,15 @@ func PostOriginalURL(w http.ResponseWriter, r *http.Request) {
 	response := &utils.JsonResponse{}
 	paramName := "original"
 
-	val, err := utils.CheckErr(w, r, paramName, 1)
-	if err != 0 {
+	originalUrl, err := utils.CheckErr(w, r, paramName, 1)
+	if err != nil {
+		fmt.Println(err)
 		return
 	}
 
-	shortUrl, err := db.SaveURLInDB(val)
-	if err != 0 {
+	shortUrl, err := db.SaveURLInDB(originalUrl)
+	if err != nil {
+		fmt.Println(err)
 		response.Status = 500
 		response.Message = "The short URL already exists"
 		utils.ResponseWriter(w, response)

@@ -2,8 +2,11 @@ package utils
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
+	"time"
 )
 
 type JsonResponse struct {
@@ -18,7 +21,7 @@ func ResponseWriter(w http.ResponseWriter, data *JsonResponse) {
 	json.NewEncoder(w).Encode(*data)
 }
 
-func CheckErr(w http.ResponseWriter, r *http.Request, paramName string, paramNumber int) (string, uint8) {
+func CheckErr(w http.ResponseWriter, r *http.Request, paramName string, paramNumber int) (string, error) {
 	response := &JsonResponse{}
 	paramVal := r.FormValue(paramName)
 	queryParamsMap := r.URL.Query()
@@ -27,7 +30,7 @@ func CheckErr(w http.ResponseWriter, r *http.Request, paramName string, paramNum
 		response.Status = 400
 		response.Message = "Wrong number of query parameters"
 		ResponseWriter(w, response)
-		return "", 1
+		return "", errors.New(response.Message)
 	}
 
 	_, exists := queryParamsMap[paramName]
@@ -35,15 +38,23 @@ func CheckErr(w http.ResponseWriter, r *http.Request, paramName string, paramNum
 		response.Status = 400
 		response.Message = fmt.Sprintf("Parameter '%v' is missing", paramName)
 		ResponseWriter(w, response)
-		return "", 1
+		return "", errors.New(response.Message)
 	}
 
 	if paramVal == "" {
 		response.Status = 400
 		response.Message = fmt.Sprintf("Parameter '%v' is empty", paramName)
 		ResponseWriter(w, response)
-		return "", 1
+		return "", errors.New(response.Message)
 	}
 
-	return "paramVal", 0
+	return paramVal, nil
+}
+
+func GenerateShortURL(originalURL string) string {
+	num := int(time.Now().UnixNano() / int64(time.Millisecond))
+	shortURL := originalURL + strconv.Itoa(num)
+
+	fmt.Println("shortURL", shortURL)
+	return shortURL
 }
