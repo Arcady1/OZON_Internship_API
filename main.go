@@ -6,9 +6,9 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
-	_ "github.com/lib/pq"
 
 	"github.com/Arcady1/OZON_Internship_API/controllers"
+	_ "github.com/Arcady1/OZON_Internship_API/models"
 )
 
 func main() {

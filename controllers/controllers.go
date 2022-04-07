@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/Arcady1/OZON_Internship_API/db"
+	"github.com/Arcady1/OZON_Internship_API/models"
 	"github.com/Arcady1/OZON_Internship_API/utils"
 )
 
@@ -31,7 +31,7 @@ func PostOriginalURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	shortUrl, err := db.SaveURLInDB(originalUrl)
+	shortUrl, err := models.SaveURLInDB(originalUrl)
 	if err != nil {
 		fmt.Println(err)
 		response.Status = 500
