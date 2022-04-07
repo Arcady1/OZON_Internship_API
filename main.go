@@ -9,7 +9,6 @@ import (
 
 	"github.com/Arcady1/OZON_Internship_API/controllers"
 	_ "github.com/Arcady1/OZON_Internship_API/models"
-	_ "github.com/Arcady1/OZON_Internship_API/utils"
 )
 
 func main() {
@@ -18,9 +17,6 @@ func main() {
 	router.HandleFunc("/api/v1.0/url", controllers.PostOriginalURL).Methods("POST")
 
 	PORT := os.Getenv("PORT")
-	if PORT == "" {
-		PORT = "8000"
-	}
 
 	fmt.Printf("Server started at %v\n", PORT)
 

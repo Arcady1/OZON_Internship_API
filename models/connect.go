@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"os"
 
 	_ "github.com/lib/pq"
 )
@@ -12,11 +13,10 @@ var db *sql.DB = nil
 var dbError error = nil
 
 func init() {
-	// TODO
-	USER := "arch"
-	PASSWORD := "1029"
-	DBNAME := "ozon"
-	SSLMODE := "disable"
+	USER := os.Getenv("DB_USER")
+	PASSWORD := os.Getenv("DB_PASSWORD")
+	DBNAME := os.Getenv("DB_DBNAME")
+	SSLMODE := os.Getenv("DB_SSLMODE")
 
 	dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=%s", USER, PASSWORD, DBNAME, SSLMODE)
 	database, err := sql.Open("postgres", dbinfo)
