@@ -35,7 +35,7 @@ func PostOriginalURL(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 		response.Status = 500
-		response.Message = "The short URL already exists"
+		response.Message = fmt.Sprintf("%v", err)
 		utils.ResponseWriter(w, response)
 
 		return
