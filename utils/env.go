@@ -1,8 +1,7 @@
 package utils
 
 import (
-	"fmt"
-	"os"
+	"log"
 	"path/filepath"
 
 	"github.com/joho/godotenv"
@@ -12,14 +11,12 @@ func init() {
 	envPath, err := filepath.Abs(".env")
 
 	if err != nil {
-		fmt.Println("Error: getting the .env file path")
-		os.Exit(2)
+		log.Fatalln("Error: getting the .env file path")
 	}
 
 	err = godotenv.Load(envPath)
 
 	if err != nil {
-		fmt.Println("\nImpossible to read .env file")
-		os.Exit(1)
+		log.Fatalln("Impossible to read .env file")
 	}
 }

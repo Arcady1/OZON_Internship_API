@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 	"os"
 
 	_ "github.com/lib/pq"
@@ -22,7 +23,7 @@ func init() {
 	database, err := sql.Open("postgres", dbinfo)
 
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		dbError = errors.New("Error: connect to the Database")
 		db = nil
 		return
@@ -32,7 +33,7 @@ func init() {
 
 	err = dropTable()
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		dbError = errors.New("Error: drop table on migration")
 		db = nil
 		return
@@ -40,7 +41,7 @@ func init() {
 
 	err = createTable()
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		dbError = errors.New("Error: create table on migration")
 		db = nil
 		return

@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"log"
 	"os"
 )
 
@@ -8,25 +9,29 @@ var dataStorageIsDB bool = false
 
 func init() {
 	args := os.Args
-	errStr := "\nSpecify the data storage location\n-l: locally\n-p: postgresql"
-	errStrExample := "\nExample: go run main.go -l"
+	errStr := "Specify the data storage location with the last parameter\nl: locally\np: postgresql"
+	errStrExample := "\n\nExample 1: go run main.go l\nExample 2: go test -v -args l\n\n"
+	mess := "The data is now saved "
 
-	if len(args) != 2 {
-		panic(errStr + errStrExample)
-	}
-
-	saveingMode := args[1]
+	saveingMode := args[len(args)-1]
 
 	switch saveingMode {
-	case "-l":
+	case "l":
 		dataStorageIsDB = false
-	case "-p":
+		log.Println(mess + "LOCALLY")
+	case "p":
 		dataStorageIsDB = true
+		log.Println(mess + "IN DATABASE")
 	default:
-		panic("\nUnknow parameter" + errStr + errStrExample)
+		dataStorageIsDB = false
+		log.Println(errStr + errStrExample + mess + "LOCALLY")
 	}
 }
 
 func GetDataStorageIsDB() bool {
 	return dataStorageIsDB
+}
+
+func SetDataStorageIsDB(status bool) {
+	dataStorageIsDB = status
 }

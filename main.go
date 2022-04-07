@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 	"os"
 
@@ -12,16 +12,17 @@ import (
 )
 
 func main() {
+	log.Println("HERE!")
 	router := mux.NewRouter()
 	router.HandleFunc("/api/v1.0/url", controllers.GetOriginalURL).Methods("GET")
 	router.HandleFunc("/api/v1.0/url", controllers.PostOriginalURL).Methods("POST")
 
 	PORT := os.Getenv("PORT")
 
-	fmt.Printf("Server started at %v\n", PORT)
+	log.Printf("Server started at: %v\n", PORT)
 
 	err := http.ListenAndServe(":"+PORT, router)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 }

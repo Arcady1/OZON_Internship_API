@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/Arcady1/OZON_Internship_API/models"
@@ -14,13 +15,13 @@ func GetOriginalURL(w http.ResponseWriter, r *http.Request) {
 
 	shortURL, err := utils.CheckQuery(w, r, paramName, 1)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 
 	originalUrl, err := models.GetURL(shortURL)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		response.Status = 500
 		response.Message = fmt.Sprintf("%v", err)
 		utils.ResponseWriter(w, response)
@@ -40,13 +41,13 @@ func PostOriginalURL(w http.ResponseWriter, r *http.Request) {
 
 	originalUrl, err := utils.CheckQuery(w, r, paramName, 1)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 
 	shortUrl, err := models.SaveURL(originalUrl)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		response.Status = 500
 		response.Message = fmt.Sprintf("%v", err)
 		utils.ResponseWriter(w, response)

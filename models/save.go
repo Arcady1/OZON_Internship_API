@@ -2,7 +2,7 @@ package models
 
 import (
 	"errors"
-	"fmt"
+	"log"
 
 	"github.com/Arcady1/OZON_Internship_API/utils"
 )
@@ -30,7 +30,7 @@ func saveURLLocally(shortURL string, originalUrl string) error {
 
 	if exists == false {
 		allUrls[shortURL] = originalUrl
-		fmt.Println("allUrls:", allUrls)
+		log.Println("allUrls:", allUrls)
 		return nil
 	} else {
 		return errors.New("Error: the short URL already exists")
@@ -41,7 +41,7 @@ func saveURLInDB(shortURL string, originalUrl string) error {
 	db, err := GetDB()
 
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return errors.New("Error: get DB")
 	}
 
@@ -51,7 +51,7 @@ func saveURLInDB(shortURL string, originalUrl string) error {
 		`, shortURL, originalUrl)
 
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return errors.New("Error: insert original URL to the DB by short URL")
 	}
 

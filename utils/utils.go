@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -54,6 +55,6 @@ func GenerateShortURL(originalURL string) string {
 	// shortURL := originalURL + strconv.Itoa(num)
 	shortURL := "lasd9p21_X"
 
-	fmt.Println("shortURL:", shortURL)
+	log.Println("shortURL:", shortURL)
 	return shortURL
 }

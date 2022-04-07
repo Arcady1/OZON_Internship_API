@@ -3,7 +3,7 @@ package models
 import (
 	"database/sql"
 	"errors"
-	"fmt"
+	"log"
 
 	"github.com/Arcady1/OZON_Internship_API/utils"
 )
@@ -38,23 +38,29 @@ func getURLLocally(shortURL string) (string, error) {
 }
 
 func getURLFromDB(db *sql.DB, shortURL string) (string, error) {
+	var originalURL string
+	var isData bool = false
+
 	data, err := db.Query(`
 			SELECT original FROM urls
 			WHERE short = $1;
 		`, shortURL)
 
-	var originalURL string
-
 	for data.Next() {
+		isData = true
 		err = data.Scan(&originalURL)
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 			return "", errors.New("Error: scanning results after getting the original URL form the DB by short URL")
 		}
 	}
 
+	if isData == false {
+		return "", errors.New("Error: the short URL doesn't exist")
+	}
+
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return "", errors.New("Error: get original URL form the DB by short URL")
 	}
 
