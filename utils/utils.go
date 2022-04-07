@@ -5,8 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"strconv"
-	"time"
 )
 
 type JsonResponse struct {
@@ -21,7 +19,7 @@ func ResponseWriter(w http.ResponseWriter, data *JsonResponse) {
 	json.NewEncoder(w).Encode(*data)
 }
 
-func CheckErr(w http.ResponseWriter, r *http.Request, paramName string, paramNumber int) (string, error) {
+func CheckQuery(w http.ResponseWriter, r *http.Request, paramName string, paramNumber int) (string, error) {
 	response := &JsonResponse{}
 	paramVal := r.FormValue(paramName)
 	queryParamsMap := r.URL.Query()
@@ -52,9 +50,10 @@ func CheckErr(w http.ResponseWriter, r *http.Request, paramName string, paramNum
 }
 
 func GenerateShortURL(originalURL string) string {
-	num := int(time.Now().UnixNano() / int64(time.Millisecond))
-	shortURL := originalURL + strconv.Itoa(num)
+	// num := int(time.Now().UnixNano() / int64(time.Millisecond))
+	// shortURL := originalURL + strconv.Itoa(num)
+	shortURL := "lasd9p21_X"
 
-	fmt.Println("shortURL", shortURL)
+	fmt.Println("shortURL:", shortURL)
 	return shortURL
 }

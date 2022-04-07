@@ -52,17 +52,18 @@ func GetDB() (*sql.DB, error) {
 }
 
 func createTable() error {
-	_, err := db.Exec(`CREATE TABLE urls (
-		short varchar(11) NOT NULL,
-		original varchar(200),
-		PRIMARY KEY (short)
-	);`)
+	_, err := db.Exec(`
+			CREATE TABLE urls (
+			short varchar(11) NOT NULL,
+			original varchar(200),
+			PRIMARY KEY (short));
+		`)
 
 	return err
 }
 
 func dropTable() error {
-	_, err := db.Query(`DROP TABLE IF EXISTS urls;`)
+	_, err := db.Exec(`DROP TABLE IF EXISTS urls;`)
 
 	return err
 }

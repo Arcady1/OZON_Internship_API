@@ -1,37 +1,57 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/Arcady1/OZON_Internship_API/utils"
 )
 
-var allUrls = make(map[string]string)
+func SaveURL(originalUrl string) (string, error) {
+	shortURL := utils.GenerateShortURL(originalUrl)
 
-func SaveURLInDB(originalUrl string) (string, error) {
+	err := saveURLLocally(shortURL, originalUrl)
+	if err != nil {
+		return "", err
+	}
+
+	err = saveURLInDB(shortURL, originalUrl)
+	if err != nil {
+		return "", err
+	}
+
+	return shortURL, nil
+}
+
+func saveURLLocally(shortURL string, originalUrl string) error {
+	_, exists := allUrls[shortURL]
+
+	if exists == false {
+		allUrls[shortURL] = originalUrl
+		fmt.Println("allUrls:", allUrls)
+		return nil
+	} else {
+		return errors.New("Error: the short URL already exists")
+	}
+}
+
+func saveURLInDB(shortURL string, originalUrl string) error {
 	db, err := GetDB()
 
 	if err != nil {
-		return "", err
+		fmt.Println(err)
+		return errors.New("Error: get DB")
 	}
 
-	shortUrl := utils.GenerateShortURL(originalUrl)
+	_, err = db.Query(`
+			INSERT INTO urls (short, original)
+			VALUES ($1, $2);
+		`, shortURL, originalUrl)
 
-	// TODO Save locally
-	// _, exists := allUrls[shortUrl]
-	// if exists == false {
-	// 	allUrls[shortUrl] = originalUrl
-	// 	fmt.Println("allUrls:", allUrls)
-	// } else {
-	// 	return "", errors.New("The short URL already exists")
-	// }
-
-	// ? Save into the Database
-	rows, err := db.Query("SELECT * FROM urls")
 	if err != nil {
-		return "", err
+		fmt.Println(err)
+		return errors.New("Error: insert original URL to the DB by short URL")
 	}
-	fmt.Println("rows:\n", rows)
 
-	return shortUrl, nil
+	return nil
 }

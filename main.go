@@ -13,7 +13,7 @@ import (
 
 func main() {
 	router := mux.NewRouter()
-	router.HandleFunc("/api/v1.0/url", controllers.GetShortURL).Methods("GET")
+	router.HandleFunc("/api/v1.0/url", controllers.GetOriginalURL).Methods("GET")
 	router.HandleFunc("/api/v1.0/url", controllers.PostOriginalURL).Methods("POST")
 
 	PORT := os.Getenv("PORT")
