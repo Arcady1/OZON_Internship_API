@@ -10,14 +10,16 @@ import (
 func SaveURL(originalUrl string) (string, error) {
 	shortURL := utils.GenerateShortURL(originalUrl)
 
-	err := saveURLLocally(shortURL, originalUrl)
-	if err != nil {
-		return "", err
-	}
-
-	err = saveURLInDB(shortURL, originalUrl)
-	if err != nil {
-		return "", err
+	if utils.GetDataStorageIsDB() == true {
+		err := saveURLInDB(shortURL, originalUrl)
+		if err != nil {
+			return "", err
+		}
+	} else {
+		err := saveURLLocally(shortURL, originalUrl)
+		if err != nil {
+			return "", err
+		}
 	}
 
 	return shortURL, nil

@@ -4,17 +4,24 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+
+	"github.com/Arcady1/OZON_Internship_API/utils"
 )
 
 func GetURL(shortURL string) (string, error) {
-	originalUrl, err := getURLLocally(shortURL)
-	if err != nil {
-		return "", err
-	}
+	var originalUrl string
+	var err error
 
-	originalUrl, err = getURLFromDB(db, shortURL)
-	if err != nil {
-		return "", err
+	if utils.GetDataStorageIsDB() == true {
+		originalUrl, err = getURLFromDB(db, shortURL)
+		if err != nil {
+			return "", err
+		}
+	} else {
+		originalUrl, err = getURLLocally(shortURL)
+		if err != nil {
+			return "", err
+		}
 	}
 
 	return originalUrl, nil

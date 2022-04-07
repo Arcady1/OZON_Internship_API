@@ -9,6 +9,7 @@ import (
 
 	"github.com/Arcady1/OZON_Internship_API/controllers"
 	_ "github.com/Arcady1/OZON_Internship_API/models"
+	_ "github.com/Arcady1/OZON_Internship_API/utils"
 )
 
 func main() {
