@@ -14,9 +14,10 @@ type JsonResponse struct {
 	Data    interface{} `json:"data"`
 }
 
-func ResponseWriter(w http.ResponseWriter, data *JsonResponse) {
+func ResponseWriter(w http.ResponseWriter, data *JsonResponse, status uint16) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(int(status))
 	json.NewEncoder(w).Encode(*data)
 }
 
@@ -28,7 +29,7 @@ func CheckQuery(w http.ResponseWriter, r *http.Request, paramName string, paramN
 	if len(queryParamsMap) != paramNumber {
 		response.Status = 400
 		response.Message = "Wrong number of query parameters"
-		ResponseWriter(w, response)
+		ResponseWriter(w, response, response.Status)
 		return "", errors.New(response.Message)
 	}
 
@@ -36,14 +37,14 @@ func CheckQuery(w http.ResponseWriter, r *http.Request, paramName string, paramN
 	if exists == false {
 		response.Status = 400
 		response.Message = fmt.Sprintf("Parameter '%v' is missing", paramName)
-		ResponseWriter(w, response)
+		ResponseWriter(w, response, response.Status)
 		return "", errors.New(response.Message)
 	}
 
 	if paramVal == "" {
 		response.Status = 400
 		response.Message = fmt.Sprintf("Parameter '%v' is empty", paramName)
-		ResponseWriter(w, response)
+		ResponseWriter(w, response, response.Status)
 		return "", errors.New(response.Message)
 	}
 

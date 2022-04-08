@@ -24,14 +24,14 @@ func GetOriginalURL(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		response.Status = 500
 		response.Message = fmt.Sprintf("%v", err)
-		utils.ResponseWriter(w, response)
+		utils.ResponseWriter(w, response, response.Status)
 
 		return
 	} else {
 		response.Status = 200
 		response.Message = "Getting the original URL"
 		response.Data = map[string]string{"originalUrl": originalUrl}
-		utils.ResponseWriter(w, response)
+		utils.ResponseWriter(w, response, response.Status)
 	}
 }
 
@@ -50,13 +50,13 @@ func PostOriginalURL(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		response.Status = 500
 		response.Message = fmt.Sprintf("%v", err)
-		utils.ResponseWriter(w, response)
+		utils.ResponseWriter(w, response, response.Status)
 
 		return
 	} else {
 		response.Status = 201
 		response.Message = "Original URL is saved"
 		response.Data = map[string]string{"shortURL": shortUrl}
-		utils.ResponseWriter(w, response)
+		utils.ResponseWriter(w, response, response.Status)
 	}
 }

@@ -5,14 +5,12 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gorilla/mux"
-
 	"github.com/Arcady1/OZON_Internship_API/controllers"
 	_ "github.com/Arcady1/OZON_Internship_API/models"
+	"github.com/gorilla/mux"
 )
 
 func main() {
-	log.Println("HERE!")
 	router := mux.NewRouter()
 	router.HandleFunc("/api/v1.0/url", controllers.GetOriginalURL).Methods("GET")
 	router.HandleFunc("/api/v1.0/url", controllers.PostOriginalURL).Methods("POST")

@@ -28,6 +28,8 @@ func GetURL(shortURL string) (string, error) {
 }
 
 func getURLLocally(shortURL string) (string, error) {
+	log.Println("Getting data locally")
+
 	originalURL, exists := allUrls[shortURL]
 
 	if exists == false {
@@ -38,6 +40,8 @@ func getURLLocally(shortURL string) (string, error) {
 }
 
 func getURLFromDB(db *sql.DB, shortURL string) (string, error) {
+	log.Println("Getting data from DB")
+
 	var originalURL string
 	var isData bool = false
 

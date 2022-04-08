@@ -29,9 +29,11 @@ func init() {
 }
 
 func GetDataStorageIsDB() bool {
+	log.Printf("Getting Data Storage Is DB parameter: %v", dataStorageIsDB)
 	return dataStorageIsDB
 }
 
 func SetDataStorageIsDB(status bool) {
+	log.Printf("Setting Data Storage Is DB parameter in: %v", status)
 	dataStorageIsDB = status
 }

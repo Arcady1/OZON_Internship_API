@@ -1,8 +1,9 @@
-package main_test
+package main
 
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -20,18 +21,21 @@ var hostURL string = "http://127.0.0.1:8000/api/v1.0"
 
 func TestMain(m *testing.M) {
 	var err error
+
+	utils.SetDataStorageIsDB(false)
+	fmt.Println("utils.GetDataStorageIsDB()", utils.GetDataStorageIsDB())
+	m.Run()
+
 	db, err = models.GetDB()
 
 	if err != nil {
 		log.Fatal(err)
 	} else {
-		log.Println("\n\t  Success: connected to the DB")
+		log.Println("Success: connected to the DB")
 	}
 
-	utils.SetDataStorageIsDB(false)
-	m.Run()
-
 	utils.SetDataStorageIsDB(true)
+	fmt.Println("utils.GetDataStorageIsDB()", utils.GetDataStorageIsDB())
 	m.Run()
 }
 
@@ -113,6 +117,17 @@ func TestPostOriginalURLOriginalURLIsEmpty(t *testing.T) {
 	}
 }
 
+func TestPostOriginalCorrect(t *testing.T) {
+	resp := &response{}
+	postJson(t, hostURL+"/url?original=https://google.com", resp)
+
+	checkResponseCode(t, resp.Status, 201)
+
+	if resp.Data == nil {
+		t.Errorf("Expected non empty data. Got %v\n", resp.Data)
+	}
+}
+
 func getJson(t *testing.T, url string, target interface{}) {
 	resp, err := http.Get(url)
 
@@ -123,6 +138,27 @@ func getJson(t *testing.T, url string, target interface{}) {
 	defer resp.Body.Close()
 	json.NewDecoder(resp.Body).Decode(target)
 }
+
+// func getJson(t *testing.T, url string, target interface{}) {
+// 	// var rr io.Reader
+// 	resp := httptest.NewRequest(http.MethodGet, url, nil)
+// 	w := httptest.NewRecorder()
+// 	res := w.Result()
+// 	data, _ := ioutil.ReadAll(res.Body)
+
+// 	fmt.Println("resp", resp)
+// 	fmt.Println("res", res)
+// 	fmt.Println("data", data)
+
+// 	// if err != nil {
+// 	// 	t.Errorf("Impossible to make GET request. URL: %s\n", url)
+// 	// }
+
+// 	defer resp.Body.Close()
+// 	// json.NewDecoder(res).Decode(target)
+
+// 	fmt.Println("target", target)
+// }
 
 func postJson(t *testing.T, url string, target interface{}) {
 	resp, err := http.PostForm(url, nil)
