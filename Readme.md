@@ -105,7 +105,7 @@ _Endpoint:_
 _Example request:_
 
 ```
-GET: http://127.0.0.1:8080/api/v1.0/url
+POST: http://127.0.0.1:8080/api/v1.0/url
 ?original=https://google.com
 ```
 
