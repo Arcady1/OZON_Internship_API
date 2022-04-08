@@ -7,16 +7,22 @@ import (
 	"github.com/Arcady1/OZON_Internship_API/utils"
 )
 
-func SaveURL(originalUrl string) (string, error) {
-	shortURL := utils.GenerateShortURL(originalUrl)
+func SaveOriginalURL(originalUrl string) (string, error) {
+	var (
+		shortURL string
+		err      error
+	)
 
+	// TODO
 	if utils.GetDataStorageIsDB() == true {
-		err := saveURLInDB(shortURL, originalUrl)
+		err = saveURLInDB(shortURL, originalUrl)
 		if err != nil {
 			return "", err
 		}
 	} else {
-		err := saveURLLocally(shortURL, originalUrl)
+		shortURL, err = saveOriginalURLLocally(originalUrl)
+
+		shortURL, err = saveOriginalURLLocally(originalUrl)
 		if err != nil {
 			return "", err
 		}
@@ -25,15 +31,24 @@ func SaveURL(originalUrl string) (string, error) {
 	return shortURL, nil
 }
 
-func saveURLLocally(shortURL string, originalUrl string) error {
-	_, exists := allUrls[shortURL]
+func saveOriginalURLLocally(originalUrl string) (string, error) {
+	shortURL := ifOriginalURLAlreadySavedLocally(originalUrl)
 
+	// If originalUrl already saved locally, return existing shortURL
+	if shortURL != "" {
+		return shortURL, nil
+	}
+
+	// If originalUrl is not saved, generate new shortURL
+	shortURL = utils.GenerateShortURL(originalUrl)
+	exists := ifShortURLAlreadySavedLocally(shortURL)
+
+	// If shortURL doesn't not exist
 	if exists == false {
 		allUrls[shortURL] = originalUrl
-		log.Println("allUrls:", allUrls)
-		return nil
+		return shortURL, nil
 	} else {
-		return errors.New("Error: the short URL already exists")
+		return "", errors.New("Error: the generated short URL already exists")
 	}
 }
 

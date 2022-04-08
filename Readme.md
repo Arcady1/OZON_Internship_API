@@ -3,4 +3,5 @@
 * Написать алгоритм сокращения URL 
 * Переименовать .env в .env-sample
 
-* ? Добавить логи
+go test -v
+go build -o app.bin && ./app.bin 

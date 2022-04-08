@@ -3,180 +3,152 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 
-	"github.com/Arcady1/OZON_Internship_API/models"
 	"github.com/Arcady1/OZON_Internship_API/utils"
 )
 
 var db *sql.DB
 
-type response = utils.JsonResponse
+var response = utils.JsonResponse{}
 
 var hostURL string = "http://127.0.0.1:8000/api/v1.0"
 
-func TestMain(m *testing.M) {
-	var err error
+var a App
 
+func TestMain(m *testing.M) {
+	a = App{}
+	a.Initialize()
+
+	log.Println("TESTS WHEN DATA STORAGE IS LOCALSTORAGE")
 	utils.SetDataStorageIsDB(false)
-	fmt.Println("utils.GetDataStorageIsDB()", utils.GetDataStorageIsDB())
 	m.Run()
 
-	db, err = models.GetDB()
-
-	if err != nil {
-		log.Fatal(err)
-	} else {
-		log.Println("Success: connected to the DB")
-	}
-
+	log.Println("TESTS WHEN DATA STORAGE IS DATABASE")
 	utils.SetDataStorageIsDB(true)
-	fmt.Println("utils.GetDataStorageIsDB()", utils.GetDataStorageIsDB())
 	m.Run()
 }
 
 func TestGetNonExistentShortURL(t *testing.T) {
-	resp := &response{}
-	getJson(t, hostURL+"/url?short=lasd9p21_X", resp)
+	var url = hostURL + "/url?short=lasd9p21_X"
 
-	checkResponseCode(t, resp.Status, 500)
+	fillResponse(t, url, "GET")
+	checkResponseCode(t, response.Status, 500)
 
-	if resp.Data != nil {
-		t.Errorf("Expected an empty data. Got %v\n", resp.Data)
+	if response.Data != nil {
+		t.Errorf("Expected an empty data. Got %v\n", response.Data)
 	}
 }
 
 func TestGetShortURLWithManyParams(t *testing.T) {
-	resp := &response{}
-	getJson(t, hostURL+"/url?short=lasd9p21_X&add=123", resp)
+	var url = hostURL + "/url?short=lasd9p21_X&add=123"
 
-	checkResponseCode(t, resp.Status, 400)
+	fillResponse(t, url, "GET")
+	checkResponseCode(t, response.Status, 400)
 
-	if resp.Data != nil {
-		t.Errorf("Expected an empty data. Got %v\n", resp.Data)
+	if response.Data != nil {
+		t.Errorf("Expected an empty data. Got %v\n", response.Data)
 	}
 }
 
 func TestGetShortURLNoShortURLParam(t *testing.T) {
-	resp := &response{}
-	getJson(t, hostURL+"/url?add=123", resp)
+	var url = hostURL + "/url?add=123"
 
-	checkResponseCode(t, resp.Status, 400)
+	fillResponse(t, url, "GET")
+	checkResponseCode(t, response.Status, 400)
 
-	if resp.Data != nil {
-		t.Errorf("Expected an empty data. Got %v\n", resp.Data)
+	if response.Data != nil {
+		t.Errorf("Expected an empty data. Got %v\n", response.Data)
 	}
 }
 
 func TestGetShortURLShortURLIsEmpty(t *testing.T) {
-	resp := &response{}
-	getJson(t, hostURL+"/url?short=", resp)
+	var url = hostURL + "/url?short="
 
-	checkResponseCode(t, resp.Status, 400)
+	fillResponse(t, url, "GET")
+	checkResponseCode(t, response.Status, 400)
 
-	if resp.Data != nil {
-		t.Errorf("Expected an empty data. Got %v\n", resp.Data)
+	if response.Data != nil {
+		t.Errorf("Expected an empty data. Got %v\n", response.Data)
 	}
 }
 
 func TestPostOriginalURLWithManyParams(t *testing.T) {
-	resp := &response{}
+	var url = hostURL + "/url?original=https://google.com&add=test"
 
-	postJson(t, hostURL+"/url?original=https://google.com&add=test", resp)
+	fillResponse(t, url, "POST")
+	checkResponseCode(t, response.Status, 400)
 
-	checkResponseCode(t, resp.Status, 400)
-
-	if resp.Data != nil {
-		t.Errorf("Expected an empty data. Got %v\n", resp.Data)
+	if response.Data != nil {
+		t.Errorf("Expected an empty data. Got %v\n", response.Data)
 	}
 }
 
 func TestPostOriginalURLNoOriginalURLParam(t *testing.T) {
-	resp := &response{}
-	postJson(t, hostURL+"/url?add=test", resp)
+	var url = hostURL + "/url?add=test"
 
-	checkResponseCode(t, resp.Status, 400)
+	fillResponse(t, url, "POST")
+	checkResponseCode(t, response.Status, 400)
 
-	if resp.Data != nil {
-		t.Errorf("Expected an empty data. Got %v\n", resp.Data)
+	if response.Data != nil {
+		t.Errorf("Expected an empty data. Got %v\n", response.Data)
 	}
 }
 
 func TestPostOriginalURLOriginalURLIsEmpty(t *testing.T) {
-	resp := &response{}
-	postJson(t, hostURL+"/url?original=", resp)
+	var url = hostURL + "/url?original="
 
-	checkResponseCode(t, resp.Status, 400)
+	fillResponse(t, url, "POST")
+	checkResponseCode(t, response.Status, 400)
 
-	if resp.Data != nil {
-		t.Errorf("Expected an empty data. Got %v\n", resp.Data)
+	if response.Data != nil {
+		t.Errorf("Expected an empty data. Got %v\n", response.Data)
 	}
 }
 
 func TestPostOriginalCorrect(t *testing.T) {
-	resp := &response{}
-	postJson(t, hostURL+"/url?original=https://google.com", resp)
+	var url = hostURL + "/url?original=https://google.com"
 
-	checkResponseCode(t, resp.Status, 201)
+	fillResponse(t, url, "POST")
+	checkResponseCode(t, response.Status, 201)
 
-	if resp.Data == nil {
-		t.Errorf("Expected non empty data. Got %v\n", resp.Data)
+	if response.Data == nil {
+		t.Errorf("Expected non empty data. Got %v\n", response.Data)
 	}
 }
 
-func getJson(t *testing.T, url string, target interface{}) {
-	resp, err := http.Get(url)
+func TestPostOriginalCorrectAndAlreadyExists(t *testing.T) {
+	var url = hostURL + "/url?original=https://google.com"
 
-	if err != nil {
-		t.Errorf("Impossible to make GET request. URL: %s\n", url)
+	fillResponse(t, url, "POST")
+	checkResponseCode(t, response.Status, 201)
+
+	if response.Data == nil {
+		t.Errorf("Expected non empty data. Got %v\n", response.Data)
 	}
-
-	defer resp.Body.Close()
-	json.NewDecoder(resp.Body).Decode(target)
 }
 
-// func getJson(t *testing.T, url string, target interface{}) {
-// 	// var rr io.Reader
-// 	resp := httptest.NewRequest(http.MethodGet, url, nil)
-// 	w := httptest.NewRecorder()
-// 	res := w.Result()
-// 	data, _ := ioutil.ReadAll(res.Body)
+func executeRequest(req *http.Request) *httptest.ResponseRecorder {
+	rr := httptest.NewRecorder()
+	a.Router.ServeHTTP(rr, req)
 
-// 	fmt.Println("resp", resp)
-// 	fmt.Println("res", res)
-// 	fmt.Println("data", data)
+	return rr
+}
 
-// 	// if err != nil {
-// 	// 	t.Errorf("Impossible to make GET request. URL: %s\n", url)
-// 	// }
-
-// 	defer resp.Body.Close()
-// 	// json.NewDecoder(res).Decode(target)
-
-// 	fmt.Println("target", target)
-// }
-
-func postJson(t *testing.T, url string, target interface{}) {
-	resp, err := http.PostForm(url, nil)
-
+func fillResponse(t *testing.T, url string, method string) {
+	req, err := http.NewRequest(method, url, nil)
 	if err != nil {
-		t.Errorf("Impossible to make POST request. URL: %s\n", url)
+		t.Errorf("Impossible to make %v request. Err: %v\n", method, err)
 	}
 
-	defer resp.Body.Close()
+	serverResponse := executeRequest(req)
 
-	body, errRead := ioutil.ReadAll(resp.Body)
-	if errRead != nil {
-		t.Errorf("Impossible to read the POST response body. URL: %s\n", url)
-	}
-
-	errUnmarshal := json.Unmarshal(body, target)
-	if errUnmarshal != nil {
-		t.Errorf("Impossible to transform the POST response body into response structure. URL: %s\n", url)
+	err = json.Unmarshal(serverResponse.Body.Bytes(), &response)
+	if err != nil {
+		t.Errorf("Impossible to parse JSON into response. Err: %v\n", err)
 	}
 }
 

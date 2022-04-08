@@ -8,7 +8,7 @@ import (
 	"github.com/Arcady1/OZON_Internship_API/utils"
 )
 
-func GetURL(shortURL string) (string, error) {
+func GetOriginalURL(shortURL string) (string, error) {
 	var originalUrl string
 	var err error
 
