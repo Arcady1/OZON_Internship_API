@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
+	"math/rand"
 	"net/http"
 )
 
@@ -52,10 +52,18 @@ func CheckQuery(w http.ResponseWriter, r *http.Request, paramName string, paramN
 }
 
 func GenerateShortURL(originalURL string) string {
-	// num := int(time.Now().UnixNano() / int64(time.Millisecond))
-	// shortURL := originalURL + strconv.Itoa(num)
-	shortURL := "lasd9p21_X"
+	const LENGTH int = 10
 
-	log.Println("shortURL:", shortURL)
-	return shortURL
+	return randomString(LENGTH)
+}
+
+func randomString(length int) string {
+	const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
+
+	result := make([]byte, length)
+
+	for i := range result {
+		result[i] = chars[rand.Intn(len(chars))]
+	}
+	return string(result)
 }
