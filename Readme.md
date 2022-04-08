@@ -1,64 +1,136 @@
-# Golang Mux Demo
+# OZON INTERNSHIP REST API
 
-[![Build Status](https://tomfern.semaphoreci.com/badges/go-mux-api/branches/master.svg)](https://tomfern.semaphoreci.com/projects/go-mux-api)
-
-Read the complete post with the explanation here:
-
-https://semaphoreci.com/community/tutorials/building-and-testing-a-rest-api-in-go-with-gorilla-mux-and-postgresql
-
-## Run locally
-
-- Start postgres
-- Prepare environment, fill DB parameters:
+## Clone 
+* Clone from GitHub:
 
 ``` bash
-$ source env-sample
+$ git clone https://github.com/Arcady1/OZON_Internship_API.git
 ```
 
-- Build and run:
+- Prepare `.env` file:
 
-```bash
-$ export GO111MODULE=on
-$ export GOFLAGS=-mod=vendor
-$ go mod download
-$ go build -o go-mux-api.bin
-$ ./go-mux-api.bin
+```
+PORT = 8080
+
+DB_HOST=127.0.0.1
+DB_USER = <YOUR DB USER>
+DB_PASSWORD = <YOUR PASSWORD>
+DB_NAME = <YOUR DB NAME>
+DB_SSLMODE = disable
+DB_PORT=5432
 ```
 
-Server is listening on localhost:8010
+## Build and run
+
+``` bash
+$ cd OZON_Internship_API/
+$ go build -o app.bin
+usage: ./app.bin l [local storage - default] 
+usage: ./app.bin p [postgresql storage]
+```
+
+Server is listening on localhost: 8080
 
 ## Test
 
 ```bash
 $ go test -v
-=== RUN   TestEmptyTable
---- PASS: TestEmptyTable (0.00s)
-=== RUN   TestGetNonExistentProduct
---- PASS: TestGetNonExistentProduct (0.00s)
-=== RUN   TestCreateProduct
---- PASS: TestCreateProduct (0.00s)
-=== RUN   TestGetProduct
---- PASS: TestGetProduct (0.00s)
-=== RUN   TestUpdateProduct
---- PASS: TestUpdateProduct (0.01s)
-=== RUN   TestDeleteProduct
---- PASS: TestDeleteProduct (0.01s)
-PASS
-ok      _/home/tom/r/go-mux-api 0.034s
 ```
 
-## License
+## Docker
+- Clone the repository
+- Start docker:
 
-Copyright (c) 2021 Rendered Text
+``` bash
+$ docker-compose up --build
+```
 
-Distributed under the MIT License. See the file LICENSE.
+Server is listening on localhost: 8080
 
+- Stop docker:
 
+``` bash
+$ docker-compose down
+```
 
+## API
 
-go test -v
-go build -o app.bin && ./app.bin 
-go build -o app.bin && ./app.bin l [p]
+### Get an original URL by short URL
 
-sudo docker-compose down
-sudo docker-compose up --build
+_Endpoint:_
+
+```GET: http://127.0.0.1:8080/api/v1.0/url```
+
+_Example request:_
+
+```
+GET: http://127.0.0.1:8080/api/v1.0/url
+?short=PBA4n_2n4s
+```
+
+_Request parameters:_
+
+| Parameter | Description                                                            | Required |
+|-----------|------------------------------------------------------------------------|----------|
+| short     | The short URL.                                                         | True     |
+
+_The example of the response for the short **PBA4n_2n4s**_
+
+```json
+{
+    "status": 200,
+    "message": "Getting the original URL",
+    "data": {
+        "originalUtl": "https://google.com"
+    }
+}
+```
+
+_Response object:_
+
+| Property            | Description                                          | 
+|---------------------|------------------------------------------------------|
+| status              | The status of the request.                           |
+| message             | Status description.                                  |
+| data -> originalUtl | The original URL.                                    |
+
+---
+
+### Get a short URL by original URL
+
+_Endpoint:_
+
+```POST: http://127.0.0.1:8080/api/v1.0/url```
+
+_Example request:_
+
+```
+GET: http://127.0.0.1:8080/api/v1.0/url
+?original=https://google.com
+```
+
+_Request parameters:_
+
+| Parameter | Description                                                            | Required |
+|-----------|------------------------------------------------------------------------|----------|
+| original  | The original URL.                                                      | True     |
+
+_The example of the response for the short **https://google.com**_
+
+```json
+{
+    "status": 201,
+    "message": "Original URL is saved",
+    "data": {
+        "shortUtl": "PBA4n_2n4s"
+    }
+}
+```
+
+_Response object:_
+
+| Property            | Description                                          | 
+|---------------------|------------------------------------------------------|
+| status              | The status of the request.                           |
+| message             | Status description.                                  |
+| data -> shortUtl    | The shortUtl URL.                                    |
