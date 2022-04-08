@@ -15,9 +15,6 @@ var db *sql.DB
 
 var response = utils.JsonResponse{}
 
-// var hostURL string = "http://127.0.0.1:8000/api/v1.0"
-var hostURL string = ""
-
 var a App
 
 func TestMain(m *testing.M) {
@@ -34,7 +31,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestGetNonExistentShortURL(t *testing.T) {
-	var url = hostURL + "/url?short=abcd1e23_F"
+	var url = "/url?short=abcd1e23_F"
 
 	fillResponse(t, url, "GET")
 	checkResponseCode(t, response.Status, 500)
@@ -45,7 +42,7 @@ func TestGetNonExistentShortURL(t *testing.T) {
 }
 
 func TestGetShortURLWithManyParams(t *testing.T) {
-	var url = hostURL + "/url?short=lasd9p21_X&add=123"
+	var url = "/url?short=lasd9p21_X&add=123"
 
 	fillResponse(t, url, "GET")
 	checkResponseCode(t, response.Status, 400)
@@ -56,7 +53,7 @@ func TestGetShortURLWithManyParams(t *testing.T) {
 }
 
 func TestGetShortURLNoShortURLParam(t *testing.T) {
-	var url = hostURL + "/url?add=123"
+	var url = "/url?add=123"
 
 	fillResponse(t, url, "GET")
 	checkResponseCode(t, response.Status, 400)
@@ -67,7 +64,7 @@ func TestGetShortURLNoShortURLParam(t *testing.T) {
 }
 
 func TestGetShortURLShortURLIsEmpty(t *testing.T) {
-	var url = hostURL + "/url?short="
+	var url = "/url?short="
 
 	fillResponse(t, url, "GET")
 	checkResponseCode(t, response.Status, 400)
@@ -78,7 +75,7 @@ func TestGetShortURLShortURLIsEmpty(t *testing.T) {
 }
 
 func TestGetShortURCorrect(t *testing.T) {
-	var url = hostURL + "/url?short=lk9_aslZxa"
+	var url = "/url?short=lk9_aslZxa"
 
 	fillResponse(t, url, "GET")
 	checkResponseCode(t, response.Status, 200)
@@ -89,7 +86,7 @@ func TestGetShortURCorrect(t *testing.T) {
 }
 
 func TestPostOriginalURLWithManyParams(t *testing.T) {
-	var url = hostURL + "/url?original=https://google.com&add=test"
+	var url = "/url?original=https://google.com&add=test"
 
 	fillResponse(t, url, "POST")
 	checkResponseCode(t, response.Status, 400)
@@ -100,7 +97,7 @@ func TestPostOriginalURLWithManyParams(t *testing.T) {
 }
 
 func TestPostOriginalURLNoOriginalURLParam(t *testing.T) {
-	var url = hostURL + "/url?add=test"
+	var url = "/url?add=test"
 
 	fillResponse(t, url, "POST")
 	checkResponseCode(t, response.Status, 400)
@@ -111,7 +108,7 @@ func TestPostOriginalURLNoOriginalURLParam(t *testing.T) {
 }
 
 func TestPostOriginalURLOriginalURLIsEmpty(t *testing.T) {
-	var url = hostURL + "/url?original="
+	var url = "/url?original="
 
 	fillResponse(t, url, "POST")
 	checkResponseCode(t, response.Status, 400)
@@ -122,7 +119,7 @@ func TestPostOriginalURLOriginalURLIsEmpty(t *testing.T) {
 }
 
 func TestPostOriginalCorrect(t *testing.T) {
-	var url = hostURL + "/url?original=https://google.com"
+	var url = "/url?original=https://google.com"
 
 	fillResponse(t, url, "POST")
 	checkResponseCode(t, response.Status, 201)
