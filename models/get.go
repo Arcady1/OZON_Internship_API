@@ -42,8 +42,10 @@ func getURLLocally(shortURL string) (string, error) {
 func getURLFromDB(db *sql.DB, shortURL string) (string, error) {
 	log.Println("Getting data from DB")
 
-	var originalURL string
-	var isData bool = false
+	var (
+		originalURL string
+		isData      bool = false
+	)
 
 	data, err := db.Query(`
 			SELECT original FROM urls

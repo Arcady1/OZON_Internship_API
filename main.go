@@ -9,7 +9,7 @@ import (
 
 func main() {
 	a := App{}
-	a.Initialize()
+	a.Initialize(false)
 
 	PORT := os.Getenv("PORT")
 	log.Printf("Server started at: %v\n", PORT)

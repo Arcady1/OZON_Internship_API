@@ -4,16 +4,14 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"log"
 	"os"
 
 	_ "github.com/lib/pq"
 )
 
-var db *sql.DB = nil
-var dbError error = nil
+var db *sql.DB
 
-func init() {
+func ConnectToDB() (*sql.DB, error) {
 	USER := os.Getenv("DB_USER")
 	PASSWORD := os.Getenv("DB_PASSWORD")
 	DBNAME := os.Getenv("DB_DBNAME")
@@ -23,33 +21,22 @@ func init() {
 	database, err := sql.Open("postgres", dbinfo)
 
 	if err != nil {
-		log.Println(err)
-		dbError = errors.New("Error: connect to the Database")
-		db = nil
-		return
+		return nil, errors.New("Error: connect to the Database")
 	} else {
 		db = database
 	}
 
 	err = dropTable()
 	if err != nil {
-		log.Println(err)
-		dbError = errors.New("Error: drop table on migration")
-		db = nil
-		return
+		return nil, errors.New("Error: drop table on migration")
 	}
 
 	err = createTable()
 	if err != nil {
-		log.Println(err)
-		dbError = errors.New("Error: create table on migration")
-		db = nil
-		return
+		return nil, errors.New("Error: create table on migration")
 	}
-}
 
-func GetDB() (*sql.DB, error) {
-	return db, dbError
+	return db, nil
 }
 
 func createTable() error {

@@ -5,3 +5,4 @@
 
 go test -v
 go build -o app.bin && ./app.bin 
+go build -o app.bin && ./app.bin l [p]

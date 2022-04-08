@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/Arcady1/OZON_Internship_API/models"
-	_ "github.com/Arcady1/OZON_Internship_API/models"
 	"github.com/Arcady1/OZON_Internship_API/utils"
 	_ "github.com/Arcady1/OZON_Internship_API/utils"
 	"github.com/gorilla/mux"
@@ -18,16 +17,20 @@ type App struct {
 	DB     *sql.DB
 }
 
-func (a *App) Initialize() {
+func (a *App) Initialize(testMode bool) {
 	var err error
 
-	a.DB, err = models.GetDB()
+	a.DB, err = models.ConnectToDB()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	a.Router = mux.NewRouter()
 	a.initRoutes()
+
+	if testMode == true {
+		a.generateSampleData()
+	}
 }
 
 func (a *App) Run(port string) {
@@ -84,6 +87,10 @@ func (a *App) postOriginalURL(w http.ResponseWriter, r *http.Request) {
 		response.Data = map[string]string{"shortURL": shortUrl}
 		utils.ResponseWriter(w, response, response.Status)
 	}
+}
+
+func (a *App) generateSampleData() {
+	models.GenerateSampleData(a.DB)
 }
 
 func (a *App) initRoutes() {

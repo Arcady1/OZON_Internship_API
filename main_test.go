@@ -21,7 +21,7 @@ var a App
 
 func TestMain(m *testing.M) {
 	a = App{}
-	a.Initialize()
+	a.Initialize(true)
 
 	log.Println("TESTS WHEN DATA STORAGE IS LOCALSTORAGE")
 	utils.SetDataStorageIsDB(false)
@@ -33,7 +33,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestGetNonExistentShortURL(t *testing.T) {
-	var url = hostURL + "/url?short=lasd9p21_X"
+	var url = hostURL + "/url?short=abcd1e23_F"
 
 	fillResponse(t, url, "GET")
 	checkResponseCode(t, response.Status, 500)
@@ -76,6 +76,17 @@ func TestGetShortURLShortURLIsEmpty(t *testing.T) {
 	}
 }
 
+func TestGetShortURCorrect(t *testing.T) {
+	var url = hostURL + "/url?short=lk9_aslZxa"
+
+	fillResponse(t, url, "GET")
+	checkResponseCode(t, response.Status, 200)
+
+	if response.Data == nil {
+		t.Errorf("Expected non empty data. Got %v\n", response.Data)
+	}
+}
+
 func TestPostOriginalURLWithManyParams(t *testing.T) {
 	var url = hostURL + "/url?original=https://google.com&add=test"
 
@@ -110,17 +121,6 @@ func TestPostOriginalURLOriginalURLIsEmpty(t *testing.T) {
 }
 
 func TestPostOriginalCorrect(t *testing.T) {
-	var url = hostURL + "/url?original=https://google.com"
-
-	fillResponse(t, url, "POST")
-	checkResponseCode(t, response.Status, 201)
-
-	if response.Data == nil {
-		t.Errorf("Expected non empty data. Got %v\n", response.Data)
-	}
-}
-
-func TestPostOriginalCorrectAndAlreadyExists(t *testing.T) {
 	var url = hostURL + "/url?original=https://google.com"
 
 	fillResponse(t, url, "POST")
