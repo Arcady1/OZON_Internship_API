@@ -10,13 +10,13 @@ $ git clone https://github.com/Arcady1/OZON_Internship_API.git
 - Prepare `.env` file:
 
 ```
-PORT = 8080
+PORT=8080
 
 DB_HOST=127.0.0.1
-DB_USER = <YOUR DB USER>
-DB_PASSWORD = <YOUR PASSWORD>
-DB_NAME = <YOUR DB NAME>
-DB_SSLMODE = disable
+DB_USER=<YOUR DB USER>
+DB_PASSWORD=<YOUR PASSWORD>
+DB_NAME=<YOUR DB NAME>
+DB_SSLMODE=disable
 DB_PORT=5432
 ```
 
@@ -90,7 +90,7 @@ _Response object:_
 
 | Property            | Description                                          | 
 |---------------------|------------------------------------------------------|
-| status              | The status of the request.                           |
+| status              | The status of the response.                          |
 | message             | Status description.                                  |
 | data -> originalUtl | The original URL.                                    |
 
@@ -131,6 +131,6 @@ _Response object:_
 
 | Property            | Description                                          | 
 |---------------------|------------------------------------------------------|
-| status              | The status of the request.                           |
+| status              | The status of the response.                          |
 | message             | Status description.                                  |
 | data -> shortUtl    | The shortUtl URL.                                    |
