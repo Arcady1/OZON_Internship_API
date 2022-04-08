@@ -15,7 +15,8 @@ var db *sql.DB
 
 var response = utils.JsonResponse{}
 
-var hostURL string = "http://127.0.0.1:8000/api/v1.0"
+// var hostURL string = "http://127.0.0.1:8000/api/v1.0"
+var hostURL string = ""
 
 var a App
 

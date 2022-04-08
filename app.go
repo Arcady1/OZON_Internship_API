@@ -35,6 +35,11 @@ func (a *App) Initialize(testMode bool) {
 
 func (a *App) Run(port string) {
 	log.Fatal(http.ListenAndServe(":"+port, a.Router))
+
+	err := models.Migrate()
+	if err != nil {
+		log.Fatalf("Error on Migrate(). Err: %v\n", err)
+	}
 }
 
 func (a *App) getOriginalURL(w http.ResponseWriter, r *http.Request) {
