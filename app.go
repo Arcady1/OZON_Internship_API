@@ -63,7 +63,7 @@ func (a *App) getOriginalURL(w http.ResponseWriter, r *http.Request) {
 	} else {
 		response.Status = 200
 		response.Message = "Getting the original URL"
-		response.Data = map[string]string{"originalUrl": originalUrl}
+		response.Data = map[string]string{"originalURL": originalUrl}
 		utils.ResponseWriter(w, response, response.Status)
 	}
 }

@@ -81,7 +81,7 @@ _The example of the response for the short **PBA4n_2n4s**_
     "status": 200,
     "message": "Getting the original URL",
     "data": {
-        "originalUtl": "https://google.com"
+        "originalURL": "https://google.com"
     }
 }
 ```
@@ -92,7 +92,7 @@ _Response object:_
 |---------------------|------------------------------------------------------|
 | status              | The status of the response.                          |
 | message             | Status description.                                  |
-| data -> originalUtl | The original URL.                                    |
+| data -> originalURL | The original URL.                                    |
 
 ---
 
@@ -122,7 +122,7 @@ _The example of the response for the short **https://google.com**_
     "status": 201,
     "message": "Original URL is saved",
     "data": {
-        "shortUtl": "PBA4n_2n4s"
+        "shortURL": "PBA4n_2n4s"
     }
 }
 ```
@@ -133,4 +133,4 @@ _Response object:_
 |---------------------|------------------------------------------------------|
 | status              | The status of the response.                          |
 | message             | Status description.                                  |
-| data -> shortUtl    | The shortUtl URL.                                    |
+| data -> shortURL    | The shortUtl URL.                                    |
