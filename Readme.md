@@ -133,4 +133,4 @@ _Response object:_
 |---------------------|------------------------------------------------------|
 | status              | The status of the response.                          |
 | message             | Status description.                                  |
-| data -> shortURL    | The shortUtl URL.                                    |
+| data -> shortURL    | The short URL.                                       |
